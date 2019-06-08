@@ -14,7 +14,7 @@
     <hr>
 </header>
 <div class="uk-grid-divider" uk-grid>
-    <div class="uk-width-2-3">
+    <div class="uk-width-expand">
         <div class="uk-container">
             {% for i in result %}
                 {% if i == '検索結果なし' %}
@@ -27,14 +27,14 @@
                             {{ i[0] }}{{ i[1]['カード名'] }}<span class="uk-text-bold">属性:</span>{{ i[1]['属性'] }}
                         </p>
 
-                        <div>
+                        <div class="uk-overflow-auto">
                             <div class="uk-text-center">デレスト</div>
-                            <table class="uk-table uk-table-divider uk-table-hover uk-table-small uk-table-middle uk-margin-remove-top">
+                            <table class="uk-table uk-table-divider uk-table-hover uk-table-small uk-table-middle uk-margin-remove-top uk-table-responsive">
                                 <thead>
                                 <tr>
-                                    <th>ランク</th>
-                                    <th>メニュー</th>
-                                    <th>属性</th>
+                                    <th class="uk-table-shrink">ランク</th>
+                                    <th class="uk-table-shrink">メニュー</th>
+                                    <th class="uk-table-shrink">属性</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -86,34 +86,17 @@
         </div>
 
     </div>
-    <div class="uk-width-1-3">
-        <form action="/result" method="post" class="uk-search uk-search-default">
-            <label class="uk-margin-medium-bottom">キャラ名
-                <input class="uk-search-input uk-margin-bottom" type="search" name="name" placeholder="有原 翼">
-            </label>
-            <label>スキル
-                <input class="uk-search-input uk-margin-bottom" type="search" name="skill" placeholder="好機活用の極意">
-            </label>
-            <label>才能
-                <input class="uk-search-input uk-margin-bottom" type="search" name="talent" placeholder="お助けマン">
-            </label>
-            <label>デレストカード
-                <input class="uk-search-input uk-margin-bottom" type="search" name="cinderella" placeholder="焼きそば生姜パン">
-            </label>
-            <div>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="rare" value="SSR">SSR</label>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="rare" value="SR">SR</label>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="rare" value="R">R</label>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="rare" value="N">N</label>
-            </div>
-            <div class="uk-margin-top">
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="element" value="花">花</label>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="element" value="蝶">蝶</label>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="element" value="風">風</label>
-                <label><input class="uk-checkbox" type="checkbox" checked="checked" name="element" value="月">月</label>
-            </div>
-            <button class="uk-button uk-button-default">Search</button>
-        </form>
+    <div class="uk-width-1-3 uk-visible@l">
+        {% include 'search_form.html' %}
+    </div>
+</div>
+
+<div class="uk-position-bottom-right uk-position-fixed uk-hidden@l">
+    <a href="#test" uk-toggle uk-icon="icon: search; ratio: 2"></a>
+</div>
+<div id="test" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        {% include 'search_form.html' %}
     </div>
 </div>
 
