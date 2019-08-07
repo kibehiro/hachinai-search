@@ -2,7 +2,7 @@ import json
 
 from flask import Flask, render_template, request, redirect, url_for
 
-from json_search import JsonSearch
+from src.json_search import JsonSearch
 
 app = Flask(__name__)
 
@@ -20,7 +20,8 @@ json_dict = {'SSR': ssr_data, 'SR': sr_data, 'R': r_data, 'N': n_data}
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    search_data = []
+    return render_template('index.html', search_data=search_data)
 
 
 @app.route('/89')
@@ -30,20 +31,20 @@ def test():
 
 @app.route("/result", methods=['GET', 'POST'])
 def search():
-    if request.method == 'POST':
+    if request.method == 'GET':
+        name = request.args.get('name')
+        skill = request.args.get('skill')
+        talent = request.args.get('talent')
+        cinderella = request.args.get('cinderella')
 
-        name = request.form['name']
-        skill = request.form['skill']
-        talent = request.form['talent']
-        cinderella = request.form['cinderella']
+        search_rank = request.args.getlist('rare')
+        search_element = request.args.getlist('element')
 
-        search_rank = request.form.getlist('rare')
-        search_element = request.form.getlist('element')
-
-        # レア度をここで弾いている
+        # レア度をここで弾いている(選択されていないレア度は検索対象に追加しない)
         search_json_data = [[i, json_dict[i]] for i in search_rank]
 
         json_search = JsonSearch(search_json_data)
+
         json_search.search_element(search_element)
         json_search.search_name(name)
         json_search.search_skill(skill)
@@ -53,8 +54,9 @@ def search():
         if not json_search.search_json_data:
             json_search.search_json_data.append('検索結果なし')
 
-        return render_template('index.html', result=json_search.search_json_data, skill=skill, talent=talent,
-                               cinderella=cinderella)
+        search_data = [name, skill, talent, cinderella, search_rank, search_element]
+
+        return render_template('index.html', result=json_search.search_json_data, search_data=search_data)
     else:
         return redirect(url_for('index'))
 
