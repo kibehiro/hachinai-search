@@ -5,11 +5,11 @@
     </label>
     <label>スキル
         <input class="uk-search-input uk-margin-bottom" type="search" name="skill"
-                {% if search_data[1] %} value="{{ search_data[1] }}" {% endif %} placeholder="好機活用の極意">
+                {% if search_data[1] %} value="{{ ' '.join(search_data[1]) }}" {% endif %} placeholder="好機活用の極意">
     </label>
     <label>才能
         <input class="uk-search-input uk-margin-bottom" type="search" name="talent"
-                {% if search_data[2] %} value="{{ search_data[2] }}" {% endif %} placeholder="お助けマン">
+                {% if search_data[2] %} value="{{ ' '.join(search_data[2]) }}" {% endif %} placeholder="お助けマン">
     </label>
     <label>デレストカード
         <input class="uk-search-input uk-margin-bottom" type="search" name="cinderella"

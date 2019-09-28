@@ -40,10 +40,16 @@
                 <div class="uk-text-center uk-margin-bottom">スキル</div>
                 <div class="uk-text-center">
                     {% for j in i[1]['スキル'] %}
-                        {% if search_data[1] != '' and search_data[1] in j %}
-                            <span class="uk-label uk-label-success">{{ j }}</span>
-                        {% else %}
+                        {% if not search_data[1] %}
                             <span class="uk-label">{{ j }}</span>
+                        {% else %}
+                            {% for k in search_data[1] %}
+                                {% if k and k in j %}
+                                    <span class="uk-label uk-label-success">{{ j }}</span>
+                                {% else %}
+                                    <span class="uk-label">{{ j }}</span>
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -53,10 +59,16 @@
                 <div class="uk-text-center uk-margin-bottom">才能</div>
                 <div class="uk-text-center">
                     {% for j in i[1]['才能'] %}
-                        {% if search_data[2] != '' and search_data[2] in j %}
-                            <span class="uk-label uk-label-success">{{ j }}</span>
-                        {% else %}
+                        {% if not search_data[2] %}
                             <span class="uk-label">{{ j }}</span>
+                        {% else %}
+                            {% for k in search_data[2] %}
+                                {% if k and k in j %}
+                                    <span class="uk-label uk-label-success">{{ j }}</span>
+                                {% else %}
+                                    <span class="uk-label">{{ j }}</span>
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
                     {% endfor %}
                 </div>

@@ -33,8 +33,8 @@ def test():
 def search():
     if request.method == 'GET':
         name = request.args.get('name')
-        skill = request.args.get('skill')
-        talent = request.args.get('talent')
+        skill = request.args.get('skill').split()
+        talent = request.args.get('talent').split()
         cinderella = request.args.get('cinderella')
 
         search_rank = request.args.getlist('rare')
