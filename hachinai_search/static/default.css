@@ -18,6 +18,21 @@ footer {
     bottom: 0;
 }
 
+footer div.content {
+    line-height: 80px;
+    font-size: 20px;
+    padding-left: 50px;
+}
+
+footer a{
+    text-decoration: none;
+    color: black;
+}
+
+footer a:hover{
+    text-decoration: underline;
+}
+
 h1.header-title {
     padding: 20px 50px;
 }
