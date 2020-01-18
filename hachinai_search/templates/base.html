@@ -21,40 +21,40 @@
         <form class="search-form" action="/result" method="GET">
             <div>
                 <label for="card_name">カード名</label>
-                <input type="text" id="card_name">
+                <input type="text" id="card_name" name="card_name">
             </div>
             <div>
                 <label for="cinderella_card_name">デレストカード</label>
-                <input type="text" id="cinderella_card_name">
+                <input type="text" id="cinderella_card_name" name="cinderella_card">
             </div>
             <div>
                 <label for="skill_name">スキル名</label>
-                <input type="text" id="skill_name">
+                <input type="text" id="skill_name" name="skill_name">
             </div>
             <div>
                 <label for="ability_name">才能</label>
-                <input type="text" id="ability_name">
+                <input type="text" id="ability_name" name="ability_name">
             </div>
             <div class="rare">
                 <p>レア度</p>
-                <input type="checkbox" checked="checked" id="SSR">
+                <input type="checkbox" checked="checked" id="SSR" name="rare" value="SSR">
                 <label for="SSR">SSR</label>
-                <input type="checkbox" checked="checked" id="SR">
+                <input type="checkbox" checked="checked" id="SR" name="rare" value="SR">
                 <label for="SR">SR</label>
-                <input type="checkbox" checked="checked" id="R">
+                <input type="checkbox" checked="checked" id="R" name="rare" value="R">
                 <label for="R">R</label>
-                <input type="checkbox" checked="checked" id="N">
+                <input type="checkbox" checked="checked" id="N" name="rare" value="N">
                 <label for="N">N</label>
             </div>
             <div class="attribute">
                 <p>属性</p>
-                <input type="checkbox" checked="checked" id="花">
+                <input type="checkbox" checked="checked" id="花" name="attribute" value="花">
                 <label for="花">花</label>
-                <input type="checkbox" checked="checked" id="蝶">
+                <input type="checkbox" checked="checked" id="蝶" name="attribute" value="蝶">
                 <label for="蝶">蝶</label>
-                <input type="checkbox" checked="checked" id="風">
+                <input type="checkbox" checked="checked" id="風" name="attribute" value="風">
                 <label for="風">風</label>
-                <input type="checkbox" checked="checked" id="月">
+                <input type="checkbox" checked="checked" id="月" name="attribute" value="月">
                 <label for="月">月</label>
             </div>
             <input type="submit" value="検索">
