@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://unpkg.com/ress/dist/ress.min.css" rel="stylesheet" type="text/css">
+    <script src="https://kit.fontawesome.com/a6a297f8cb.js" crossorigin="anonymous"></script>
+    <link href="../static/default.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1 class="header-title content">hachinai-search</h1>
+</header>
+<div class="content content-flex">
+    <div class="result">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div class="search-form">
+        <form class="search-form" action="/result" method="post">
+            <div>
+                <label for="card_name">カード名</label>
+                <input type="text" id="card_name">
+            </div>
+            <div>
+                <label for="cinderella_card_name">デレストカード</label>
+                <input type="text" id="cinderella_card_name">
+            </div>
+            <div>
+                <label for="skill_name">スキル名</label>
+                <input type="text" id="skill_name">
+            </div>
+            <div>
+                <label for="ability_name">才能</label>
+                <input type="text" id="ability_name">
+            </div>
+            <div class="rare">
+                <p>レア度</p>
+                <input type="checkbox" checked="checked" id="SSR">
+                <label for="SSR">SSR</label>
+                <input type="checkbox" checked="checked" id="SR">
+                <label for="SR">SR</label>
+                <input type="checkbox" checked="checked" id="R">
+                <label for="R">R</label>
+                <input type="checkbox" checked="checked" id="N">
+                <label for="N">N</label>
+            </div>
+            <div class="attribute">
+                <p>属性</p>
+                <input type="checkbox" checked="checked" id="花">
+                <label for="花">花</label>
+                <input type="checkbox" checked="checked" id="蝶">
+                <label for="蝶">蝶</label>
+                <input type="checkbox" checked="checked" id="風">
+                <label for="風">風</label>
+                <input type="checkbox" checked="checked" id="月">
+                <label for="月">月</label>
+            </div>
+            <input type="submit" value="検索">
+        </form>
+    </div>
+</div>
+<footer>
+    <div class="content">
+        制作：<a href="https://twitter.com/kibehiro" target="_blank" rel="noopener">キベ <i class="fab fa-twitter"></i></a>
+    </div>
+</footer>
+</body>
+</html>
