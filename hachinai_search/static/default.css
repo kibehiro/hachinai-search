@@ -110,6 +110,20 @@ ul li {
     border-radius: 5px;
 }
 
+.pagination{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pagination input{
+    width: 2em;
+    height: 2em;
+    border-style: solid;
+    border-width: thin;
+    border-color: black;
+    border-radius: 50%;
+}
+
 /*ここまで検索結果の設定*/
 
 /*ここからサーチフォームの設定*/
@@ -136,13 +150,13 @@ div.search-form form input {
     margin-left: 1em;
 }
 
-input[type="text"] {
+div.search-form input[type="text"] {
     border-width: thin;
     border-style: solid;
     height: 2em;
 }
 
-input[type="submit"] {
+div.search-form input[type="submit"] {
     border-style: solid;
     border-width: thin;
     border-color: black;
