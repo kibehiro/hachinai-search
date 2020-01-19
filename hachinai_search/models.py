@@ -99,6 +99,8 @@ def get_result(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql)
         '{where};'.format(cinderella=cinderella_card_sql, skill=skill_name_sql,
                           ability=ability_name_sql, where=where_sql)
     )
+
+    # TODO: INNER JOINのAND検索がうまく動いていない。複数スキル検索できず
     cur.execute('SELECT DISTINCT ("card_informations".card_id) FROM card_informations '
                 'INNER JOIN card_cinderellas ON card_informations.card_id = card_cinderellas.card_id '
                 'INNER JOIN cinderella_card_informations ON card_cinderellas.cinderella_card_id = '
