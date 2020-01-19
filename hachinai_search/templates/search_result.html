@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for i in result %}
+        <div class="card">
+            <div class="name">
+                {{ i['rarity'] }}
+                {{ i['card_name'] }}
+                属性：{{ i['attribute'] }}
+            </div>
+            <div class="cinderella list">
+                <p>デレストメニュー</p>
+                <ul>
+                    {% for j in i['cinderella_cards'] %}
+                        <li>{{ j['card_name'] }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="skill list">
+                <p>スキル</p>
+                <ul>
+                    {% for j in i['skills'] %}
+                        <li>{{ j['skill_name'] }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="ability list">
+                <p>才能</p>
+                <ul>
+                    {% for j in i['ability'] %}
+                        <li>{{ j['ability_name'] }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

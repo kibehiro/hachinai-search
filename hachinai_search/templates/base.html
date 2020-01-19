@@ -21,19 +21,39 @@
         <form class="search-form" action="/result" method="GET">
             <div>
                 <label for="card_name">カード名</label>
-                <input type="text" id="card_name" name="card_name">
+                {% if card_name %}
+                    <input type="text" id="card_name" name="card_name" value="{{ card_name }}">
+                {% else %}
+                    <input type="text" id="card_name" name="card_name">
+                {% endif %}
+
             </div>
             <div>
                 <label for="cinderella_card_name">デレストカード</label>
-                <input type="text" id="cinderella_card_name" name="cinderella_card">
+                {% if cinderella_card_name %}
+                    <input type="text" id="cinderella_card_name" name="cinderella_card"
+                           value="{{ cinderella_card_name }}">
+                {% else %}
+                    <input type="text" id="cinderella_card_name" name="cinderella_card">
+                {% endif %}
+
             </div>
             <div>
                 <label for="skill_name">スキル名</label>
-                <input type="text" id="skill_name" name="skill_name">
+                {% if skill_name %}
+                    <input type="text" id="skill_name" name="skill_name" value="{{ skill_name }}">
+                {% else %}
+                    <input type="text" id="skill_name" name="skill_name">
+
+                {% endif %}
             </div>
             <div>
                 <label for="ability_name">才能</label>
-                <input type="text" id="ability_name" name="ability_name">
+                {% if ability_name %}
+                    <input type="text" id="ability_name" name="ability_name" value="{{ ability_name }}">
+                {% else %}
+                    <input type="text" id="ability_name" name="ability_name">
+                {% endif %}
             </div>
             <div class="rare">
                 <p>レア度</p>
