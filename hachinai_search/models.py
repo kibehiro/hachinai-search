@@ -27,46 +27,67 @@ def split_word_space(word):
         return None
 
 
-def make_join_sql(table_name, search_word):
+def make_cinderella_intersect_sql(search_word):
     sql = ''
     if search_word:
         for i in search_word:
-            sql += ' AND {table_name} LIKE \'%{search_word}%\''.format(table_name=table_name, search_word=i)
+            sql += ('INTERSECT '
+                    'SELECT card_id FROM card_cinderellas '
+                    'INNER JOIN cinderella_card_informations cci '
+                    'ON card_cinderellas.cinderella_card_id = cci.cinderella_card_information_id '
+                    'AND cinderella_card_name LIKE \'%{search_word}%\' '.format(search_word=i))
     return sql
 
 
-def make_where_sql(card_name, rare, attribute):
+def make_skill_intersect_sql(search_word):
+    sql = ''
+    if search_word:
+        for i in search_word:
+            sql += ('INTERSECT '
+                    'SELECT card_id FROM card_skills '
+                    'INNER JOIN skill_informations si on card_skills.skill_id = si.skill_information_id '
+                    'AND skill_name LIKE \'%{search_word}%\' '.format(search_word=i))
+    return sql
+
+
+def make_ability_intersect_sql(search_word):
+    sql = ''
+    if search_word:
+        for i in search_word:
+            sql += ('INTERSECT '
+                    'SELECT card_id FROM card_abilities '
+                    'INNER JOIN ability_informations ai on card_abilities.ability_id = ai.ability_information_id '
+                    'AND ability_name LIKE \'%{search_word}%\' '.format(search_word=i))
+    return sql
+
+
+def make_where_sql(word):
     where_sql = ''
-    if card_name:
-        for i in card_name:
-            where_sql += '(card_name LIKE \'%{}%\') OR '.format(i)
-        where_sql = where_sql[:-3]
-        where_sql += ' AND '
-
-    if rare:
-        where_sql += '('
-        for i in rare:
-            where_sql += 'rarity = \'{}\' OR '.format(i)
-        where_sql = where_sql[:-4]
-        where_sql += ') AND '
-
-    if attribute:
-        where_sql += '('
-        for i in attribute:
-            where_sql += 'attribute = \'{}\' OR '.format(i)
-        where_sql = where_sql[:-4]
-        where_sql += ') AND '
-
-    if where_sql:
-        where_sql = 'WHERE ' + where_sql
-        where_sql = where_sql[:-5]
-
+    if word:
+        for i in word:
+            where_sql += '\'{}\', '.format(i)
+        where_sql = where_sql[:-2]
+    else:
+        where_sql = '\'\''
     return where_sql
+
+
+def make_card_name_sql(word):
+    card_name_sql = ''
+    if word:
+        card_name_sql += 'card_name ~~ * ANY(ARRAY['
+        for i in word:
+            card_name_sql += '\'%{}%\', '.format(i)
+        card_name_sql = card_name_sql[:-2]
+        card_name_sql += ']) AND'
+    return card_name_sql
 
 
 def get_page(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql):
     conn = get_db()
     cur = conn.cursor()
+
+    # SQL変えたらCOUNTできなくなったてへぺろ☆
     cur.execute('SELECT COUNT (DISTINCT ("card_informations".card_id)) FROM card_informations '
                 'INNER JOIN card_cinderellas ON card_informations.card_id = card_cinderellas.card_id '
                 'INNER JOIN cinderella_card_informations ON card_cinderellas.cinderella_card_id = '
@@ -83,34 +104,20 @@ def get_page(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql):
     return paging
 
 
-def get_result(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql):
+def get_result(card_name, rarity, attribute, cinderella_card_sql, skill_name_sql, ability_sql):
     conn = get_db()
     cur = conn.cursor()
 
-    print(
-        'SELECT DISTINCT ("card_informations".card_id) FROM card_informations \n'
-        'INNER JOIN card_cinderellas ON card_informations.card_id = card_cinderellas.card_id \n'
-        'INNER JOIN cinderella_card_informations ON card_cinderellas.cinderella_card_id = '
-        'cinderella_card_informations.cinderella_card_information_id{cinderella} \n'
-        'INNER JOIN card_skills ON card_informations.card_id = card_skills.card_id \n'
-        'INNER JOIN skill_informations ON card_skills.skill_id = skill_informations.skill_information_id{skill} \n'
-        'INNER JOIN card_abilities ON card_informations.card_id = card_abilities.card_id \n'
-        'INNER JOIN ability_informations on card_abilities.ability_id = ability_informations.ability_information_id{ability} \n'
-        '{where};'.format(cinderella=cinderella_card_sql, skill=skill_name_sql,
-                          ability=ability_name_sql, where=where_sql)
-    )
-
-    # TODO: INNER JOINのAND検索がうまく動いていない。複数スキル検索できず
-    cur.execute('SELECT DISTINCT ("card_informations".card_id) FROM card_informations '
-                'INNER JOIN card_cinderellas ON card_informations.card_id = card_cinderellas.card_id '
-                'INNER JOIN cinderella_card_informations ON card_cinderellas.cinderella_card_id = '
-                'cinderella_card_informations.cinderella_card_information_id{cinderella} '
-                'INNER JOIN card_skills ON card_informations.card_id = card_skills.card_id '
-                'INNER JOIN skill_informations ON card_skills.skill_id = skill_informations.skill_information_id{skill} '
-                'INNER JOIN card_abilities ON card_informations.card_id = card_abilities.card_id '
-                'INNER JOIN ability_informations on card_abilities.ability_id = ability_informations.ability_information_id{ability} '
-                '{where};'.format(cinderella=cinderella_card_sql, skill=skill_name_sql,
-                                  ability=ability_name_sql, where=where_sql))
+    cur.execute('SELECT DISTINCT (card_id) '
+                'FROM card_informations '
+                'WHERE {card_name} '
+                'rarity IN ({rarity}) '
+                'AND attribute IN ({attribute}) '
+                '{cinderella_card}'
+                '{skill}'
+                '{ability}'
+                ''.format(card_name=card_name, rarity=rarity, attribute=attribute, cinderella_card=cinderella_card_sql,
+                          skill=skill_name_sql, ability=ability_sql))
 
     return cur.fetchall()
 
@@ -187,16 +194,16 @@ def search_db(card_name, cinderella_card, skill_name, ability_name, rare, attrib
     rare = rare
     attribute = attribute
 
-    cinderella_card_sql = make_join_sql('cinderella_card_name', cinderella_card)
-    skill_name_sql = make_join_sql('skill_name', skill_name)
-    ability_name_sql = make_join_sql('ability_name', ability_name)
+    card_name_sql = make_card_name_sql(card_name)
+    rarity_sql = make_where_sql(rare)
+    attribute_sql = make_where_sql(attribute)
 
-    where_sql = make_where_sql(card_name, rare, attribute)
+    cinderella_card_sql = make_cinderella_intersect_sql(cinderella_card)
+    skill_name_sql = make_skill_intersect_sql(skill_name)
+    ability_name_sql = make_ability_intersect_sql(ability_name)
 
-    print(skill_name_sql)
-    print(ability_name_sql)
     # page = get_page(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql)
-    result = get_result(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql)
+    result = get_result(card_name_sql, rarity_sql, attribute_sql, cinderella_card_sql, skill_name_sql, ability_name_sql)
 
     result_list = []
     for i in result:
