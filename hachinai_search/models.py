@@ -27,60 +27,63 @@ def split_word_space(word):
         return None
 
 
+def make_card_name_sql(word):
+    conn = get_db()
+    cur = conn.cursor()
+    card_name_sql = b''
+    if word:
+        word_after = list(map(lambda x: '%' + x + '%', word))
+        card_name_sql += cur.mogrify('card_name ~~* ANY(%s) AND ', (word_after,))
+    return card_name_sql.decode()
+
+
+def make_where_sql(name, word):
+    conn = get_db()
+    cur = conn.cursor()
+    where_sql = b''
+    where_sql += cur.mogrify('{} ~~* ANY (%s) AND '.format(name), (word,))
+    return where_sql.decode()
+
+
 def make_cinderella_intersect_sql(search_word):
-    sql = ''
+    conn = get_db()
+    cur = conn.cursor()
+    sql = b''
     if search_word:
         for i in search_word:
-            sql += ('INTERSECT '
-                    'SELECT card_id FROM card_cinderellas '
-                    'INNER JOIN cinderella_card_informations cci '
-                    'ON card_cinderellas.cinderella_card_id = cci.cinderella_card_information_id '
-                    'AND cinderella_card_name LIKE \'%{search_word}%\' '.format(search_word=i))
-    return sql
+            sql += b'INTERSECT'
+            sql += cur.mogrify('SELECT card_id FROM card_cinderellas '
+                               'INNER JOIN cinderella_card_informations cci '
+                               'ON card_cinderellas.cinderella_card_id = cci.cinderella_card_information_id '
+                               'AND cinderella_card_name LIKE %s ', ('%' + i + '%',))
+    return sql.decode()
 
 
 def make_skill_intersect_sql(search_word):
-    sql = ''
+    conn = get_db()
+    cur = conn.cursor()
+    sql = b''
     if search_word:
         for i in search_word:
-            sql += ('INTERSECT '
-                    'SELECT card_id FROM card_skills '
-                    'INNER JOIN skill_informations si on card_skills.skill_id = si.skill_information_id '
-                    'AND skill_name LIKE \'%{search_word}%\' '.format(search_word=i))
-    return sql
+            sql += b'INTERSECT '
+            sql += cur.mogrify('SELECT card_id FROM card_skills '
+                               'INNER JOIN skill_informations si on card_skills.skill_id = si.skill_information_id '
+                               'AND skill_name LIKE %s ', ('%' + i + '%',))
+    return sql.decode()
 
 
 def make_ability_intersect_sql(search_word):
-    sql = ''
+    conn = get_db()
+    cur = conn.cursor()
+    sql = b''
     if search_word:
         for i in search_word:
-            sql += ('INTERSECT '
-                    'SELECT card_id FROM card_abilities '
-                    'INNER JOIN ability_informations ai on card_abilities.ability_id = ai.ability_information_id '
-                    'AND ability_name LIKE \'%{search_word}%\' '.format(search_word=i))
-    return sql
-
-
-def make_where_sql(word):
-    where_sql = ''
-    if word:
-        for i in word:
-            where_sql += '\'{}\', '.format(i)
-        where_sql = where_sql[:-2]
-    else:
-        where_sql = '\'\''
-    return where_sql
-
-
-def make_card_name_sql(word):
-    card_name_sql = ''
-    if word:
-        card_name_sql += 'card_name ~~ * ANY(ARRAY['
-        for i in word:
-            card_name_sql += '\'%{}%\', '.format(i)
-        card_name_sql = card_name_sql[:-2]
-        card_name_sql += ']) AND'
-    return card_name_sql
+            sql += b'INTERSECT '
+            sql += cur.mogrify('SELECT card_id FROM card_abilities '
+                               'INNER JOIN ability_informations ai on card_abilities.ability_id'
+                               ' = ai.ability_information_id '
+                               'AND ability_name LIKE %s ', ('%' + i + '%',))
+    return sql.decode()
 
 
 def get_page(cinderella_card_sql, skill_name_sql, ability_name_sql, where_sql):
@@ -108,17 +111,28 @@ def get_result(card_name, rarity, attribute, cinderella_card_sql, skill_name_sql
     conn = get_db()
     cur = conn.cursor()
 
+    where = card_name + rarity + attribute
+
+    if where:
+        where = 'WHERE ' + where[:-4]
+
+    print(cur.mogrify('SELECT DISTINCT (card_id) '
+                      'FROM card_informations '
+                      '{where}'
+                      '{cinderella_card}'
+                      '{skill}'
+                      '{ability}'
+                      .format(where=where, cinderella_card=cinderella_card_sql,
+                              skill=skill_name_sql, ability=ability_sql)))
+
     cur.execute('SELECT DISTINCT (card_id) '
                 'FROM card_informations '
-                'WHERE {card_name} '
-                'rarity IN ({rarity}) '
-                'AND attribute IN ({attribute}) '
+                '{where}'
                 '{cinderella_card}'
                 '{skill}'
                 '{ability}'
-                ''.format(card_name=card_name, rarity=rarity, attribute=attribute, cinderella_card=cinderella_card_sql,
-                          skill=skill_name_sql, ability=ability_sql))
-
+                .format(where=where, cinderella_card=cinderella_card_sql,
+                        skill=skill_name_sql, ability=ability_sql))
     return cur.fetchall()
 
 
@@ -191,12 +205,9 @@ def search_db(card_name, cinderella_card, skill_name, ability_name, rare, attrib
     skill_name = split_word_space(skill_name)
     ability_name = split_word_space(ability_name)
 
-    rare = rare
-    attribute = attribute
-
     card_name_sql = make_card_name_sql(card_name)
-    rarity_sql = make_where_sql(rare)
-    attribute_sql = make_where_sql(attribute)
+    rarity_sql = make_where_sql('rarity', rare)
+    attribute_sql = make_where_sql('attribute', attribute)
 
     cinderella_card_sql = make_cinderella_intersect_sql(cinderella_card)
     skill_name_sql = make_skill_intersect_sql(skill_name)
