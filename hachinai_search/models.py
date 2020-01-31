@@ -51,7 +51,7 @@ def make_cinderella_intersect_sql(search_word):
     sql = b''
     if search_word:
         for i in search_word:
-            sql += b'INTERSECT'
+            sql += b'INTERSECT '
             sql += cur.mogrify('SELECT card_id FROM card_cinderellas '
                                'INNER JOIN cinderella_card_informations cci '
                                'ON card_cinderellas.cinderella_card_id = cci.cinderella_card_information_id '
