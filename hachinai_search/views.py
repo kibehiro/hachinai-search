@@ -27,8 +27,6 @@ def search():
         result = search_db(card_name, cinderella_card_name, skill_name, ability_name, rare_list, attribute_list)
 
         if result:
-            # TODO: 検索にヒットした部分のハイライトが実装できていない
-            #  フロントに持たせるか、バックエンドに持たせるかも未定
             return render_template('search_result.html', result=result, card_name=card_name,
                                    cinderella_card_name=cinderella_card_name, skill_name=skill_name,
                                    ability_name=ability_name)
