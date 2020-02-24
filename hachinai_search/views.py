@@ -38,5 +38,10 @@ def search():
         return redirect(url_for('/'))
 
 
+@app.route('/termsOfUse')
+def terms_of_use():
+    return render_template('terms_of_use.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
