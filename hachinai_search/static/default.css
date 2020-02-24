@@ -92,14 +92,14 @@ div.card {
     padding-bottom: 1em;
 }
 
-ul {
+.card ul {
     margin-left: 1em;
     margin-top: 0.5em;
     display: flex;
     flex-wrap: wrap;
 }
 
-ul li {
+.card ul li {
     list-style: none;
     display: inline;
     margin-right: 1em;
@@ -189,3 +189,27 @@ input[type="checkbox"]:checked + label {
 }
 
 /*ここまでサーチフォームの設定*/
+
+/*ここから利用規約等の設定*/
+
+.terms_of_use h1, h2 {
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.terms_of_use {
+    padding-right: 20px;
+}
+.terms_of_use p {
+    padding-left: 40px;
+}
+
+.terms_of_use p + ul {
+    padding-left: 60px;
+}
+.terms_of_use ul {
+    padding-left: 40px;
+    list-style-type: disc;
+}
+
+/*ここまで利用規約等の設定*/
