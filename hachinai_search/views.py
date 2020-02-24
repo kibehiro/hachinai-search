@@ -43,5 +43,10 @@ def terms_of_use():
     return render_template('terms_of_use.html')
 
 
+@app.route('/privacyPolicy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
